@@ -1,0 +1,32 @@
+name: Release new version
+on:
+  release:
+    types: [published]
+jobs:
+  push_to_registry:
+    name: Push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and Push to GitHub Packages - App
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: ${{ github.repository }}/shhgit-app
+          tags: latest
+          tag_with_ref: true
+      - name: Build and Push to GitHub Packages - Web
+        uses: docker/build-push-action@v1
+        with:
+          path: www
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: ${{ github.repository }}/shhgit-www
+          tags: latest
+          tag_with_ref: true
