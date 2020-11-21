@@ -25,5 +25,6 @@ RUN apt-get update -y \
         && apt-mark hold nginx
 
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY public/ /usr/share/nginx/html/
 
 CMD ["nginx", "-g", "daemon off;"]
